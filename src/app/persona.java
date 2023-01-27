@@ -15,26 +15,31 @@ import javax.swing.JOptionPane;
  */
 public class persona extends javax.swing.JFrame {
 
-    public static final String URL = "jdbc:mysql://localhost:3306/Escuela"; //Direccion, puerto y nombre de la Base de Datos
-    public static final String USERNAME = "root"; //Usuario de Acceso a MySQL
-    public static final String PASSWORD = "password"; //Password del usuario
-
     PreparedStatement ps;
     ResultSet rs;
 
+    public persona() {
+        initComponents();
+        txtId.setVisible(false);
+    }
+
     public static Connection getConection() {
         Connection con = null;
+        String base = "escuela"; //Nombre de la base de datos
+        String url = "jdbc:mysql://localhost:3306/" + base; //Direccion, puerto y nombre de la Base de Datos
+        String user = "root"; //Usuario de Acceso a MySQL
+        String password = "password"; //Password del usuario
 
         try {
-            con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            System.out.println(e);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println(e);
         }
         return con;
     }
 
     private void limpiarCajas() {
-
         txtClave.setText(null);
         txtNombre.setText(null);
         txtDomicilio.setText(null);
@@ -42,12 +47,6 @@ public class persona extends javax.swing.JFrame {
         txtEmail.setText(null);
         txtFecha.setText(null);
         cbxGenero.setSelectedIndex(0);
-
-    }
-
-    public persona() {
-        initComponents();
-        txtId.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -261,7 +260,6 @@ public class persona extends javax.swing.JFrame {
         Connection con;
 
         try {
-
             con = getConection();
             ps = con.prepareStatement("INSERT INTO persona (clave, nombre, domicilio, telefono, correo_electronico, fecha_nacimiento, genero) VALUES(?,?,?,?,?,?,?) ");
             ps.setString(1, txtClave.getText());
@@ -276,18 +274,15 @@ public class persona extends javax.swing.JFrame {
 
             if (res > 0) {
                 JOptionPane.showMessageDialog(null, "Persona Guardada");
-                limpiarCajas();
             } else {
                 JOptionPane.showMessageDialog(null, "Error al Guardar persona");
-                limpiarCajas();
             }
-
+            limpiarCajas();
             con.close();
 
         } catch (HeadlessException | SQLException e) {
             System.err.println(e);
         }
-
     }//GEN-LAST:event_btnGuardaActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -295,7 +290,6 @@ public class persona extends javax.swing.JFrame {
         Connection con;
 
         try {
-
             con = getConection();
             ps = con.prepareStatement("SELECT * FROM persona WHERE clave = ?");
             ps.setString(1, txtClave.getText());
@@ -318,7 +312,6 @@ public class persona extends javax.swing.JFrame {
         } catch (HeadlessException | SQLException e) {
             System.err.println(e);
         }
-
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnModificaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificaActionPerformed
@@ -326,7 +319,6 @@ public class persona extends javax.swing.JFrame {
         Connection con;
 
         try {
-
             con = getConection();
             ps = con.prepareStatement("UPDATE persona SET clave=?, nombre=?, domicilio=?, telefono=?, correo_electronico=?, fecha_nacimiento=?, genero=? WHERE id=?");
             ps.setString(1, txtClave.getText());
@@ -342,18 +334,15 @@ public class persona extends javax.swing.JFrame {
 
             if (res > 0) {
                 JOptionPane.showMessageDialog(null, "Persona Modificada");
-                limpiarCajas();
             } else {
                 JOptionPane.showMessageDialog(null, "Error al Modificar persona");
-                limpiarCajas();
             }
-
+            limpiarCajas();
             con.close();
 
         } catch (HeadlessException | SQLException e) {
             System.err.println(e);
         }
-
     }//GEN-LAST:event_btnModificaActionPerformed
 
     private void btnEliminaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminaActionPerformed
@@ -361,7 +350,6 @@ public class persona extends javax.swing.JFrame {
         Connection con;
 
         try {
-
             con = getConection();
             ps = con.prepareStatement("DELETE FROM persona WHERE id=?");
             ps.setInt(1, Integer.parseInt(txtId.getText()));
@@ -370,18 +358,15 @@ public class persona extends javax.swing.JFrame {
 
             if (res > 0) {
                 JOptionPane.showMessageDialog(null, "Persona Eliminada");
-                limpiarCajas();
             } else {
                 JOptionPane.showMessageDialog(null, "Error al eliminar persona");
-                limpiarCajas();
             }
-
+            limpiarCajas();
             con.close();
 
         } catch (HeadlessException | NumberFormatException | SQLException e) {
             System.err.println(e);
         }
-
     }//GEN-LAST:event_btnEliminaActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
